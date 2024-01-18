@@ -1,0 +1,53 @@
+https://github.com/MaharaniJ/backend-login-signup/blob/master/server.js
+
+https://github.com/MaharaniJ/e-commerce-backend/blob/main/middleware/authenticate.js
+
+https://github.com/MaharaniJ/userAuthentication/blob/master/server/server.js
+https://github.com/MaharaniJ/Password-reset-server/blob/main/routes/router.js
+
+https://github.com/MaharaniJ/register-mern/blob/main/server/server.js
+
+https://github.com/MaharaniJ/server-hashed-token/blob/main/controllers.js/usercontroller.js
+
+https://github.com/MaharaniJ/login-logout-backend/tree/main/routes
+
+https://github.com/MaharaniJ/URL-Shortener-server/blob/main/controllers/auth/register.js
+
+https://github.com/MaharaniJ/server-social-login/blob/main/controllers/users.js
+
+jwt.sign() method
+
+https://github.com/MaharaniJ/backend-stackoverflow/blob/main/server.js
+
+https://github.com/MaharaniJ/social-login-backend/blob/main/server.js
+
+https://github.com/MaharaniJ/food-delivery-app-backend/blob/main/functions/routes/userRouter.js
+
+https://github.com/MaharaniJ/backend-crud-operation/blob/main/routes/userRoute.js
+
+https://github.com/MaharaniJ/gmail-server/blob/main/routes/route.js
+
+generateRouter()
+
+   const token = await userValid.generateAuthtoken()
+
+                //// Cookie-Generate
+                res.cookie("usercookie", token, {
+                    expires: new Date(Date.now() + 9000000),
+                    httpOnly: true
+                });
+
+                const result = {
+                    userValid,
+                    token
+                }
+                res.status(201).json({ status: 201, result })
+
+            }
+
+        } else {
+            res.json({
+                message: "Password was incorrect!!",
+            });
+
+https://github.com/MaharaniJ?page=3&tab=repositories
