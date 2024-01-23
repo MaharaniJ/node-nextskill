@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const PORT = 6000;
-const router = express.Router();
- require("./config/db");
- const Products = require("./models/productSchema");
+const PORT = 5000;
+
+require("./config/db");
+
 const DefaultData = require("./DefualtData");
-// const router = require("./routes/router");
- const cookieParser = require("cookie-parser");
+const Router = require("./routers/router");
+const cookieParser = require("cookie-parser");
 
 app.use(
   cors({
@@ -19,8 +19,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser(""));
 
-
-app.use(router);
+app.use(Router);
 
 app.listen(PORT, () => {
   console.log(`server is listening on ${PORT}`);

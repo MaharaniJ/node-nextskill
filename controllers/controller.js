@@ -1,13 +1,25 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const USER = require("../models/userSchema");
+const { USER, Checkout } = require("../models/userSchema");
+const Productdata = require("../models/productSchema");
 
 const secretKey = process.env.SECRET_KEY;
 
-const registerUser = async (req, res) => {
-  const {  firstname, lastname, email, password, cpassword } = req.body;
+const getProducts = async (req, res) => {
+  try {
+    const products = await Productdata.find();
+    console.log(products);
+    res.status(200).json(products);
+  } catch (error) {
+    return res.status(400).json(error);
+    // console.error("error" + error.message);
+  }
+};
 
-  if (! firstname || !lastname || !email || !password || !cpassword) {
+const registerUser = async (req, res) => {
+  const { firstname, lastname, email, password, cpassword } = req.body;
+
+  if (!firstname || !lastname || !email || !password || !cpassword) {
     return res
       .status(422)
       .json({ error: "Please fill in all the required fields." });
@@ -42,7 +54,9 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ error: "required fields are empty" });
+    return res
+      .status(400)
+      .json({ status: "fail", error: "Required fields are empty" });
   }
   try {
     const loginuser = await USER.findOne({ email: email });
@@ -50,20 +64,34 @@ const loginUser = async (req, res) => {
       const isMatch = await bcrypt.compare(password, loginuser.password);
 
       if (!isMatch) {
-        return res.status(400).json({ error: "Invalid password" });
+        return res
+          .status(400)
+          .json({ status: "fail", error: "Invalid password" });
       } else {
-        // const token = await generateAuthToken(loginuser);
-
         let token = jwt.sign({ id: loginuser._id }, secretKey, {
           expiresIn: "1d",
         });
         req.headers.authorization = `Bearer ${token}`;
 
-        res.status(200).json({ token: token });
+        res.status(200).json({ status: "success", token: token });
       }
     }
   } catch (error) {
-    res.status(400).json({ error: "invalid crediential pass" });
+    res.status(400).json({ status: "fail", error: "Invalid credentials" });
+  }
+};
+
+const getaProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+
+    const individual = await Productdata.findOne({ id: id });
+    // console.log(individual);
+
+    res.status(201).json(individual);
+  } catch (error) {
+    return res.status(400).json(error);
   }
 };
 
@@ -77,8 +105,8 @@ const addToCart = async (req, res) => {
     if (Usercontact) {
       const cartData = await Usercontact.addcartdata(cart);
 
-      await Usercontact.save();
-      return res.status(201).json(Usercontact);
+      await cartData.save();
+      return res.status(201).json(cartData);
     } else {
       res.status(401).json({ error: "Invalid user" });
     }
@@ -120,6 +148,30 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+const checkout = async (req, res) => {
+  const { userId } = req.params;
+  const checkoutData = req.body;
+
+  try {
+    // Create a new Checkout document
+    const newCheckout = new Checkout(checkoutData);
+    await newCheckout.save();
+
+    // Update the user's checkoutInfo field with the ID of the new Checkout document
+    await USER.findByIdAndUpdate(userId, { checkoutInfo: newCheckout._id });
+
+    res.json({
+      success: true,
+      message: "Checkout information saved successfully",
+    });
+  } catch (error) {
+    console.error("Error while saving checkout information:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to save checkout information" });
+  }
+};
+
 const logoutUser = async (req, res) => {
   try {
     req.rootUser.tokens = req.rootUser.tokens.filter((item) => {
@@ -133,11 +185,14 @@ const logoutUser = async (req, res) => {
 };
 
 module.exports = {
+  getProducts,
   registerUser,
   loginUser,
+  getaProduct,
   addToCart,
   getCartDetails,
   validateUser,
   removeFromCart,
+  checkout,
   logoutUser,
 };

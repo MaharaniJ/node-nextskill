@@ -1,28 +1,36 @@
 const express = require("express");
 const router = new express.Router();
-const userController = require("../controllers/userController");
+const controllers = require("../controllers/controller");
 const authentication = require("../middleware/authenticate");
+// const {
+//   registerUser,
+//   loginUser,
+//   addToCart,
+//   getCartDetails,
+//   validateUser,
+//   removeFromCart,
+//   logoutUser,
+// } = require("../controllers/controller");
 
-router.get("/getproducts", async (req, res) => {
-  // Existing route logic
-});
 
-router.get("/getproduct/:id", async (req, res) => {
-  // Existing route logic
-});
 
-router.post("/register", userController.registerUser);
+router.get("/getproducts", controllers.getProducts);
 
-router.post("/login", userController.loginUser);
+router.get("/getproduct/:id",controllers.getaProduct);
 
-router.post("/addtocart/:id", authentication, userController.addToCart);
+router.post("/register",controllers.registerUser);
 
-router.get("/cartdetails", authentication, userController.getCartDetails);
+router.post("/login", controllers.loginUser);
 
-router.get("/validuser", authentication, userController.validateUser);
+router.post("/addtocart/:id", controllers.addToCart);
 
-router.get("/remove/:id", authentication, userController.removeFromCart);
+router.get("/cartdetails", controllers.getCartDetails);
 
-router.get("/logout", authentication, userController.logoutUser);
+router.get("/validuser",  controllers.validateUser);
+
+router.get("/remove/:id",  controllers.removeFromCart);
+
+router.get("/logout",  controllers.logoutUser);
+router.post("/checkout", controllers.checkout)
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const carts = [
     {
-      cart_id: 1,
+      id: 1,
       name: "Abstract Folded Plots",
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-45_720x.jpg",
@@ -12,7 +12,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 2,
+      id: 2,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-24_720x_1.jpg",
       name: "Adhesive Tape Dispanser",
@@ -24,7 +24,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 3,
+      id: 3,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-22_720x_1_2.jpg",
       name: "Pendant Key Ornaments",
@@ -36,7 +36,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 4,
+      id: 4,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-41_720x_1_2_1.jpg",
       name: "Antique Sewing Scissor",
@@ -48,7 +48,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 5,
+      id: 5,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-3_720x_1.png",
       name: "Motorized Tricycle",
@@ -60,7 +60,7 @@ const carts = [
       categories: "Gift ideasToys",
     },
     {
-      cart_id: 6,
+      id: 6,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-06_720x_1_1.jpg",
       name: "Modern Camera",
@@ -72,7 +72,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 7,
+      id: 7,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-16_720x_1_1_1.jpg",
       name: "LCD Writing Tablet",
@@ -84,7 +84,7 @@ const carts = [
       categories: "Gift ideasKniting & Sewing",
     },
     {
-      cart_id: 8,
+      id: 8,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-21_720x_2.jpg",
       name: "Antique Sewing Scisso",
@@ -96,7 +96,7 @@ const carts = [
       categories: "Gift ideasKniting & Sewing",
     },
     {
-      cart_id: 9,
+      id: 9,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-54_720x_2.jpg",
       name: "Bouncer Measuring Cup",
@@ -108,7 +108,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 10,
+      id: 10,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-54_720x_2.jpg",
   
@@ -121,7 +121,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 11,
+      id: 11,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-46_720x.jpg",
       name: "Maison Meng Wood Painting",
@@ -134,7 +134,7 @@ const carts = [
     },
     
     {
-      cart_id: 12,
+      id: 12,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-3_720x_1_4.png",
       name: "Abstract Folded Pots",
@@ -146,7 +146,7 @@ const carts = [
       categories: "Gift ideasKids & Babies",
     },
     {
-      cart_id: 13,
+      id: 13,
       imagSrc:
         "https://blueskytechmage.com/kalles/media/catalog/product/cache/8fd6ecdf2e825b10abccdbdeb5a711b5/p/r/product-13_720x.jpg",
       name: "Digital Camera System",
