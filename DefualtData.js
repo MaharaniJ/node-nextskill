@@ -5,7 +5,7 @@ const Defaultdata = async () => {
   try {
     await productSchema.deleteMany({});
     const data = await productSchema.insertMany(carts);
-    console.log(data);
+    // console.log(data);
   } catch (error) {
     console.error("Error: " + error.message);
   }

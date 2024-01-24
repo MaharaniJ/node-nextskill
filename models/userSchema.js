@@ -34,12 +34,12 @@ const checkoutSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  fname: {
+    firstname: {
     type: String,
     required: true,
     trim: true,
   },
-  lname: {
+  lastname:{
     type: String,
     required: true,
     trim: true,

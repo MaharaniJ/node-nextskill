@@ -73,11 +73,14 @@ const loginUser = async (req, res) => {
         });
         req.headers.authorization = `Bearer ${token}`;
 
-        res.status(200).json({ status: "success", token: token });
+        res.status(200).json({ token: token });
       }
     }
   } catch (error) {
-    res.status(400).json({ status: "fail", error: "Invalid credentials" });
+    console.error("Registration error:", error);
+    res.status(422).json({
+      error: error.message || "Registration failed. Please try again.",
+    });
   }
 };
 
@@ -117,16 +120,26 @@ const addToCart = async (req, res) => {
 
 const getCartDetails = async (req, res) => {
   try {
+    console.log("Requesting cart details for userID:", req.userID);
+
     const buyuser = await USER.findOne({ _id: req.userID });
-    res.status(201).json(buyuser);
+    console.log("Retrieved user data:", buyuser);
+
+    if (!buyuser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(buyuser);
   } catch (error) {
-    res.status(401).json({ error: "Error occurred in buynow" });
+    console.error("Error fetching cart details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const validateUser = async (req, res) => {
   try {
     const validateuser = await USER.find({ _id: req.userID });
+    console.log(validateuser);
     res.status(200).json(validateuser);
   } catch (error) {
     res.status(400).json({ message: error.message });
