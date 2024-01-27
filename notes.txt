@@ -72,3 +72,152 @@ const addToCart = async (req, res) => {
     res.status(401).json({ error: "Invalid user context" });
   }
 };
+
+
+userSchema.methods.addcartdata = async function (product) {
+  try {
+    const existingProduct = this.carts.find((item) =>
+      item.productId.equals(product._id)
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      this.carts.push({
+        productId: product._id,
+        quantity: 1,
+      });
+    }
+
+    await this.save();
+    return this.carts;
+  } catch (error) {
+    console.log(error + "");
+    throw error;
+  }
+};
+
+
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const userSchema = new mongoose.Schema({
+  // ... other fields ...
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+});
+
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: '1d' });
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+  return token;
+};
+
+userSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error('Invalid email or password');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error('Invalid email or password');
+  }
+
+  return user;
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
+
+
+
+
+
+loginregister:
+
+// const registerUser = async (req, res) => {
+//   const { firstname, lastname, email, password, cpassword } = req.body;
+
+//   if (!firstname || !lastname || !email || !password || !cpassword) {
+//     return res
+//       .status(422)
+//       .json({ error: "Please fill in all the required fields." });
+//   }
+
+//   try {
+//     const preuser = await USER.findOne({ email: email });
+
+//     if (preuser) {
+//       return res.status(422).json({ error: "This email is already in use." });
+//     } else if (password !== cpassword) {
+//       return res.status(422).json({ error: "Passwords do not match." });
+//     } else {
+//       const newUser = new USER({
+//         firstname,
+//         lastname,
+//         email,
+//         password,
+//         cpassword,
+//       });
+//       const salt = await bcrypt.genSalt(10);
+//       const hash = await bcrypt.hash(password, salt);
+//       newUser.password = hash;
+//       await newUser.save();
+//       return res.status(200).json({ message: "User Registered successfully!" });
+//     }
+//   } catch (error) {
+//     res.status(422).json({ error: "Registration failed. Please try again." });
+//   }
+// };
+
+// const loginUser = async (req, res) => {
+//   const { email, password } = req.body;
+//   if (!email || !password) {
+//     return res
+//       .status(400)
+//       .json({ status: "fail", error: "Required fields are empty" });
+//   }
+//   try {
+//     const loginuser = await USER.findOne({ email: email });
+//     if (loginuser) {
+//       const isMatch = await bcrypt.compare(password, loginuser.password);
+
+//       if (!isMatch) {
+//         return res
+//           .status(400)
+//           .json({ status: "fail", error: "Invalid password" });
+//       } else {
+//         let token = jwt.sign({ id: loginuser._id }, secretKey, {
+//           expiresIn: "1d",
+//         });
+//         // loginuser.tokens.push({ token });
+//         loginuser.tokens = loginuser.tokens.concat({ token });
+
+//         // Save the user document with the new token
+//         await loginuser.save();
+
+//         req.headers.authorization = `Bearer ${token}`;
+
+//         res.status(200).json({ token: token });
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Registration error:", error);
+//     res.status(422).json({
+//       error: error.message || "Registration failed. Please try again.",
+//     });
+//   }
+// };

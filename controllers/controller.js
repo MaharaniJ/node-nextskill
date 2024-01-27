@@ -33,54 +33,49 @@ const registerUser = async (req, res) => {
     } else if (password !== cpassword) {
       return res.status(422).json({ error: "Passwords do not match." });
     } else {
-      const newUser = new USER({
+      const finaluser = new USER({
         firstname,
         lastname,
         email,
         password,
         cpassword,
       });
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(password, salt);
-      newUser.password = hash;
-      await newUser.save();
-      return res.status(200).json({ message: "User Registered successfully!" });
+      const storedata = await finaluser.save();
+      // Hash the password here if needed
+
+      res.status(201).json(storedata);
     }
   } catch (error) {
-    res.status(422).json({ error: "Registration failed. Please try again." });
+    // console.log("Error during registration: " + error.message);
+    return res
+      .status(422)
+      .json({ error: "Registration failed. Please try again." });
   }
 };
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ status: "fail", error: "Required fields are empty" });
+    return res.status(400).json({ error: "required fields are empty" });
   }
   try {
     const loginuser = await USER.findOne({ email: email });
     if (loginuser) {
       const isMatch = await bcrypt.compare(password, loginuser.password);
+      // console.log(isMatch);
 
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ status: "fail", error: "Invalid password" });
+        return res.status(400).json({ error: "Invalid password" });
       } else {
-        let token = jwt.sign({ id: loginuser._id }, secretKey, {
-          expiresIn: "1d",
-        });
+        const token = await loginuser.generateAuthToken();
         req.headers.authorization = `Bearer ${token}`;
 
         res.status(200).json({ token: token });
+        console.log(token);
       }
     }
   } catch (error) {
-    console.error("Registration error:", error);
-    res.status(422).json({
-      error: error.message || "Registration failed. Please try again.",
-    });
+    res.status(400).json({ error: "invalid crediential pass" });
   }
 };
 
@@ -90,7 +85,7 @@ const getaProduct = async (req, res) => {
     console.log(id);
 
     const individual = await Productdata.findOne({ id: id });
-    // console.log(individual);
+    console.log(individual);
 
     res.status(201).json(individual);
   } catch (error) {
@@ -101,20 +96,24 @@ const getaProduct = async (req, res) => {
 const addToCart = async (req, res) => {
   try {
     const { id } = req.params;
-    const cart = await Products.findOne({ id: id });
+    const product = await Productdata.findOne({ id: id });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
     const Usercontact = await USER.findOne({ _id: req.userID });
 
     if (Usercontact) {
-      const cartData = await Usercontact.addcartdata(cart);
-
-      await cartData.save();
-      return res.status(201).json(cartData);
+      const cartData = await Usercontact.addcartdata(product);
+      await Usercontact.save();
+      return res.status(200).json(cartData);
     } else {
       res.status(401).json({ error: "Invalid user" });
     }
   } catch (error) {
-    res.status(401).json({ error: "Invalid user context" });
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -142,7 +141,7 @@ const validateUser = async (req, res) => {
     console.log(validateuser);
     res.status(200).json(validateuser);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ "validataError:": error.message });
   }
 };
 
