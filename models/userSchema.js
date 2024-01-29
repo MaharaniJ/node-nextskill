@@ -5,12 +5,12 @@ const secretKey = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken");const validator = require("validator");
 
 const checkoutSchema = new mongoose.Schema({
-  firstName: {
+  firstname: {
     type: String,
     required: true,
     trim: true,
   },
-  lastName: {
+  lastname: {
     type: String,
     required: true,
     trim: true,
@@ -25,16 +25,16 @@ const checkoutSchema = new mongoose.Schema({
       }
     },
   },
-  companyName: String,
+  companyname: String,
   country: {
     type: String,
     enum: ["", "United States", "Canada", "Mexico", "India"],
     default: "",
   },
-  streetAddress: String,
+  streetaddress: String,
   city: String,
   region: String,
-  postalCode: String,
+  postalcode: String,
 });
 
 const userSchema = new mongoose.Schema({

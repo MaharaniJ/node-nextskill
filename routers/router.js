@@ -30,7 +30,8 @@ router.get("/validuser",authentication,  controllers.validateUser);
 
 router.get("/remove/:id",authentication,  controllers.removeFromCart);
 
-router.get("/logout",authentication,  controllers.logoutUser);
-router.post("/checkout",authentication, controllers.checkout)
+router.get("/logout/:id",authentication,  controllers.logoutUser);
+
+router.post("/checkout/:id",authentication, controllers.checkout)
 
 module.exports = router;

@@ -69,8 +69,17 @@ const loginUser = async (req, res) => {
       } else {
         const token = await loginuser.generateAuthToken();
         req.headers.authorization = `Bearer ${token}`;
-
-        res.status(200).json({ token: token });
+        const userData = {
+          _id: loginuser._id,
+          firstname: loginuser.firstname,
+          lastname:loginuser.lastname,
+          email: loginuser.email,
+          password: loginuser.password,
+          cpassword: loginuser.cpassword,
+          carts: loginuser.carts,
+          // Include other user details as needed
+        };
+        res.status(200).json({ token,...userData });
         console.log(token);
       }
     }
@@ -163,6 +172,7 @@ const removeFromCart = async (req, res) => {
 const checkout = async (req, res) => {
   const { userId } = req.params;
   const checkoutData = req.body;
+  console.log("checkoutData:",checkoutData)
 
   try {
     // Create a new Checkout document
