@@ -32,6 +32,6 @@ router.get("/remove/:id",authentication,  controllers.removeFromCart);
 
 router.get("/logout/:id",authentication,  controllers.logoutUser);
 
-router.post("/checkout/:id",authentication, controllers.checkout)
+router.post("/checkout",authentication, controllers.checkout)
 
 module.exports = router;

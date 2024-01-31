@@ -2,8 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { USER, Checkout } = require("../models/userSchema");
 const Productdata = require("../models/productSchema");
-
 const secretKey = process.env.SECRET_KEY;
+
 
 const getProducts = async (req, res) => {
   try {
@@ -40,6 +40,9 @@ const registerUser = async (req, res) => {
         password,
         cpassword,
       });
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt);
+      finaluser.password = hash; 
       const storedata = await finaluser.save();
       // Hash the password here if needed
 
@@ -67,19 +70,21 @@ const loginUser = async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ error: "Invalid password" });
       } else {
-        const token = await loginuser.generateAuthToken();
+        let token = jwt.sign({ id: loginuser._id }, secretKey, {
+          expiresIn: "1d",
+        });
         req.headers.authorization = `Bearer ${token}`;
         const userData = {
           _id: loginuser._id,
           firstname: loginuser.firstname,
-          lastname:loginuser.lastname,
+          lastname: loginuser.lastname,
           email: loginuser.email,
           password: loginuser.password,
           cpassword: loginuser.cpassword,
           carts: loginuser.carts,
           // Include other user details as needed
         };
-        res.status(200).json({ token,...userData });
+        res.status(200).json({ token, ...userData });
         console.log(token);
       }
     }
@@ -170,19 +175,30 @@ const removeFromCart = async (req, res) => {
 };
 
 const checkout = async (req, res) => {
-  const { userId } = req.params;
   const checkoutData = req.body;
-  console.log("checkoutData:",checkoutData)
 
   try {
-    // Create a new Checkout document
-    const newCheckout = new Checkout(checkoutData);
-    await newCheckout.save();
+    // Find the user by email
+    const user = await USER.findOne({ email: checkoutData.email });
 
-    // Update the user's checkoutInfo field with the ID of the new Checkout document
-    await USER.findByIdAndUpdate(userId, { checkoutInfo: newCheckout._id });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
 
-    res.json({
+    // Update the existing Checkout document if it exists
+    const existingCheckout = await Checkout.findOneAndUpdate(
+      { email: checkoutData.email },
+      { $set: checkoutData },
+      { upsert: true, new: true }
+    );
+
+    // Update the user's checkoutInfo field with the ID of the updated (or newly created) Checkout document
+    user.checkoutInfo = existingCheckout._id;
+    await user.save();
+
+    return res.json({
       success: true,
       message: "Checkout information saved successfully",
     });
